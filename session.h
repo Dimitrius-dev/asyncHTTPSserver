@@ -34,9 +34,11 @@ private:
 	
 	ssl_socket socket_;
 
-	enum { msg_length = 512 };
+	enum { msg_length = 512 };//512
 
 	char data_[msg_length];
+
+	std::string buf_r;
 
 	int timeout;
 
