@@ -11,19 +11,19 @@ server::server(boost::asio::io_service& io_service, unsigned short port)
 		| boost::asio::ssl::context::no_sslv2
 		| boost::asio::ssl::context::single_dh_use);
 	context_.set_password_callback(boost::bind(&server::get_password, this));
-	context_.use_certificate_chain_file("keys/pem/server.pem");
+	context_.use_certificate_chain_file("keys/pem1/server.crt");
 	std::cout<<"use_certificate_chain_file - ok\n";
-	context_.use_private_key_file("keys/pem/server.pem", boost::asio::ssl::context::pem);
+	context_.use_private_key_file("keys/pem1/server.key", boost::asio::ssl::context::pem);
 	std::cout<<"use_private_key_file - ok\n";
-	//context_.use_tmp_dh_file("keys/pem/dh2048.pem");//?
-	//std::cout<<"error3\n";
+	context_.use_tmp_dh_file("keys/pem1/dh2048.pem");//?
+	std::cout<<"use_tmp_dh_file - ok\n";
 
 	start_accept();
 }
 
 std::string server::get_password() const
 {
-	return "test";//?
+	return "test1";//?
 }
 
 void server::start_accept()

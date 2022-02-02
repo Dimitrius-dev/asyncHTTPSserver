@@ -28,6 +28,19 @@ std::string Parser::start()
 	
 }
 
+bool Parser::is_image(std::string line)
+{
+	for(int i = 0; i < type_images_size;i++)
+	{
+		if(line.find(type_images[i]) != std::string::npos)
+		{
+			current_type = type_images[i];
+			return true;
+		}
+	}
+	return false;
+}
+
 std::string Parser::get()
 {
 	int iter = request.find('/');
@@ -36,49 +49,34 @@ std::string Parser::get()
 
 	std::string buf = "";
 	std::string buf_full = "";
-	std::string buf_html = "";
+	std::string buf_data = "";
 	
 	if(filepath == "")
 	{
 		buf = "text/html; charset=utf-8";
 
-		buf_html = std::string("<html>\n") + 
-						"<body>\n" +
-						"<h1>Привет?</h1>\n" +
-						"<h2>Ну ты и лох</h2>\n" +
-						"<p><img src=\"photo.jpg\"></p>\n"
-						"</body>\n"
-						"</html>";
+		filepath = "html/main.html";
 
-		buf_full = std::string("HTTP/1.1 200 OK\r\n") +
-						"Version: HTTP/1.1\r\n" +
-						"Content-Type: " + buf + "\r\n" +
-						"Content-Length: " + std::to_string(buf_html.length()) +
-						flag_stop +
-						buf_html + 
-						flag_stop;
+		open_file(filepath, buf_data);
 	}
 
-	if(filepath == "photo.jpg")
+	if(is_image(filepath))
 	{
-		buf = "image/jpeg";
-		
-		//std::vector<char> v;
-		std::string v;
+		buf = std::string("image/") + current_type;
 
-		open_file(filepath, v);
-
-		buf_full = std::string("HTTP/1.1 200 OK\r\n") +
-						"Version: HTTP/1.1\r\n" +
-						"Content-Type: " + buf + "\r\n" +
-						"Content-Length: " + std::to_string(v.size()) +
-						flag_stop +
-						v + 
-						flag_stop;
-		
+		open_file(std::string("images/") + filepath, buf_data);
 	}
 
-	
+
+
+	buf_full = std::string("HTTP/1.1 200 OK\r\n") +
+					"Version: HTTP/1.1\r\n" +
+					"Content-Type: " + buf + "\r\n" +
+					"Content-Length: " + std::to_string(buf_data.size()) +
+					flag_stop +
+					buf_data + 
+					flag_stop;
+		
 
 	return buf_full;
 	
@@ -101,7 +99,7 @@ void Parser::open_file(std::string filepath, std::string &v){
 		while(fin.get(ch)){
 				v.push_back(ch);
 		}
-		std::cout<<"file "<<v<<'\n';
+		//std::cout<<"file "<<v<<'\n';
 	}
 
 	fin.close();

@@ -4,7 +4,7 @@ session::session(boost::asio::io_service& io_service,
       boost::asio::ssl::context& context)
     : socket_(io_service, context), deadline_(io_service)
 {
-	timeout = 120;
+	timeout = 12;
 }
 
 void session::check_deadline()
@@ -14,9 +14,11 @@ void session::check_deadline()
 	{
 		std::cout<<"socket deleted\n";
 
-		//socket_.close();//??
+		socket_.close();//??
 
-		socket_.lowest_layer().close();
+		std::cout<<"===============exit=================\n";
+
+		//socket_.lowest_layer().close();
 	}
 
 }
@@ -42,11 +44,9 @@ void session::do_handshake(const boost::system::error_code& error)
 	if (!error)
 	{
 		std::cout<<"do_handshake - successful(do_handshake)\n";
-		//deadline_.expires_from_now(boost::posix_time::seconds(timeout));
-		//deadline_.async_wait(boost::bind(&session::check_deadline, this));
 
-		//deadline_.cancel();
-
+		deadline_.expires_from_now(boost::posix_time::seconds(timeout));
+		deadline_.async_wait(boost::bind(&session::check_deadline, this));
 		socket_.async_read_some(boost::asio::buffer(data_, msg_length),
 		  boost::bind(&session::do_read, this,
 		    boost::asio::placeholders::error,
@@ -62,7 +62,8 @@ void session::do_handshake(const boost::system::error_code& error)
 void session::do_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
 	//std::cout<<"bytes_transferred = "<<bytes_transferred<<" --------------------------------\n";
-
+	
+	deadline_.cancel();
 	
 	if( (!error)||(bytes_transferred == 0) )
 	{
@@ -77,11 +78,12 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 		{
 			buf_r.append(buf);
 			
-			//std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
+			std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
 
 			parser.setRequest(buf_r);
 
-			std::string buf_s = "";
+			std::string buf_s = " ";
+
 			buf_s.append(parser.start());
 
 			std::cout<<"buf_s: "<<buf_s<<'\n';
@@ -100,10 +102,12 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 			buf_r.append(buf);
 			buf = "";
 
+			deadline_.expires_from_now(boost::posix_time::seconds(timeout));
+			deadline_.async_wait(boost::bind(&session::check_deadline, this));
 			socket_.async_read_some(boost::asio::buffer(data_, msg_length),
-		  boost::bind(&session::do_read, this,
-		    boost::asio::placeholders::error,
-		    boost::asio::placeholders::bytes_transferred));
+			  boost::bind(&session::do_read, this,
+			    boost::asio::placeholders::error,
+			    boost::asio::placeholders::bytes_transferred));
 		}
 
 	}
@@ -123,6 +127,8 @@ void session::do_write(const boost::system::error_code& error)
 		//deadline_.async_wait(boost::bind(&session::check_deadline, this));
 		std::cout<<"\nsended to browser:\n";
 
+		deadline_.expires_from_now(boost::posix_time::seconds(timeout));
+		deadline_.async_wait(boost::bind(&session::check_deadline, this));
 		socket_.async_read_some(boost::asio::buffer(data_, msg_length),
 		  boost::bind(&session::do_read, this,
 		    boost::asio::placeholders::error,
