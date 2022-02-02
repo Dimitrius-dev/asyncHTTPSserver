@@ -23,7 +23,7 @@ server::server(boost::asio::io_service& io_service, unsigned short port)
 
 std::string server::get_password() const
 {
-	return "";
+	return "test";//?
 }
 
 void server::start_accept()

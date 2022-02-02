@@ -30,6 +30,8 @@ ssl_socket::lowest_layer_type& session::socket()
 
 void session::start()
 {
+	std::cout<<"===== Connected =====\n";
+
 	socket_.async_handshake(boost::asio::ssl::stream_base::server,
 	boost::bind(&session::do_handshake, this,
 	  boost::asio::placeholders::error));
@@ -39,6 +41,7 @@ void session::do_handshake(const boost::system::error_code& error)
 {
 	if (!error)
 	{
+		std::cout<<"do_handshake - successful(do_handshake)\n";
 		//deadline_.expires_from_now(boost::posix_time::seconds(timeout));
 		//deadline_.async_wait(boost::bind(&session::check_deadline, this));
 
@@ -51,13 +54,17 @@ void session::do_handshake(const boost::system::error_code& error)
 	}
 	else
 	{
+		std::cout<<"socket deleted(do_handshake)\n";
 		delete this;
 	}
 }
 
 void session::do_read(const boost::system::error_code& error, size_t bytes_transferred)
 {
-	if (!error)
+	//std::cout<<"bytes_transferred = "<<bytes_transferred<<" --------------------------------\n";
+
+	
+	if( (!error)||(bytes_transferred == 0) )
 	{
 
 		std::string buf = "";
@@ -69,27 +76,15 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 		if (buf.find(flag_stop) != std::string::npos) 
 		{
 			buf_r.append(buf);
-
-			std::cout<<"\n========size of buf_r======== : "<<buf_r.length()<<'\n';
 			
-			std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
+			//std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
 
+			parser.setRequest(buf_r);
 
-			std::string buf_html =  std::string("<html>\n") + 
-						"<body>\n" +
-						"<h1>Привет?</h1>\n" +
-						"<h2>Ну ты и лох</h2>\n" +
-						"<p>ахахахахха</p>\n"
-						"</body>\n"
-						"</html>";
+			std::string buf_s = "";
+			buf_s.append(parser.start());
 
-			std::string buf_s = std::string("HTTP/1.1 200 OK\r\n") +
-						"Version: HTTP/1.1\r\n" +
-						"Content-Type: text/html; charset=utf-8\r\n" +
-						"Content-Length: " + std::to_string(buf_html.length()) +
-						flag_stop +
-						buf_html + 
-						flag_stop;
+			std::cout<<"buf_s: "<<buf_s<<'\n';
 
 			boost::asio::async_write(socket_,
 			  boost::asio::buffer(buf_s.c_str(), buf_s.length()),
@@ -101,6 +96,7 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 		else
 		{
 
+			std::cout<<"=====added=====\n";
 			buf_r.append(buf);
 			buf = "";
 
@@ -113,6 +109,7 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 	}
 	else
 	{
+		std::cout<<"socket deleted(do_read)\n";
 		delete this;
 	}
 }
@@ -123,7 +120,8 @@ void session::do_write(const boost::system::error_code& error)
 	{
 		buf_r.clear();
 		//deadline_.expires_from_now(boost::posix_time::seconds(timeout));
-		//deadline_.async_wait(boost::bind(&session::check_deadline, this));	
+		//deadline_.async_wait(boost::bind(&session::check_deadline, this));
+		std::cout<<"\nsended to browser:\n";
 
 		socket_.async_read_some(boost::asio::buffer(data_, msg_length),
 		  boost::bind(&session::do_read, this,
@@ -132,6 +130,7 @@ void session::do_write(const boost::system::error_code& error)
 	}
 	else
 	{
+		std::cout<<"socket deleted(do_write)\n";
 		delete this;
 	}
 }

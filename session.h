@@ -2,6 +2,8 @@
 #define SESSION_H
 
 #include "libs.h"
+#include "parser.h"
+
 #include <iostream>
 
 #include <boost/bind.hpp>
@@ -44,6 +46,7 @@ private:
 
 	std::string flag_stop = "\r\n\r\n";
 	
+	Parser parser;
 };
 
 #endif

@@ -10,6 +10,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <boost/asio/ssl.hpp>
+#include <boost/core/ignore_unused.hpp>
 #include <functional>
 
 #include <boost/asio/deadline_timer.hpp>
