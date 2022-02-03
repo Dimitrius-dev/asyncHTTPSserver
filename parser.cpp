@@ -11,6 +11,7 @@ void Parser::setRequest(std::string request)
 
 std::string Parser::start()
 {
+	/*
 	if(request.find("GET") != std::string::npos)
 	{
 		std::cout<<"GET\n";
@@ -22,8 +23,9 @@ std::string Parser::start()
 		std::cout<<"POST\n";
 		return post();
 	}
+	*/
 
-	return ""; 
+	return give(); 
 
 	
 }
@@ -41,8 +43,32 @@ bool Parser::is_image(std::string line)
 	return false;
 }
 
-std::string Parser::get()
+bool Parser::is_page(std::string line)
 {
+	for(int i = 0; i < type_pages_size;i++)
+	{
+		if(line.find(type_pages[i]) != std::string::npos)
+		{
+			current_type = type_pages[i];
+			return true;
+		}
+	}
+	return false;
+}
+
+std::string Parser::give()
+{
+	
+	if(request.find("POST") != std::string::npos)
+	{
+		int st = request.find(flag_stop);
+		int end = request.find(' ');
+		content = request.substr(st , end - st);
+		std::cout<<"========CONTENT: "<<content<<'\n';
+	}
+
+	
+
 	int iter = request.find('/');
 	std::string filepath = request.substr(iter + 1, request.find(' ', iter) - iter - 1);
 	std::cout<<"filepath: "<<filepath<<'\n';
@@ -51,14 +77,24 @@ std::string Parser::get()
 	std::string buf_full = "";
 	std::string buf_data = "";
 	
-	if(filepath == "")
+	if(filepath.empty())//home page
 	{
+		std::cout<<"home page\n";
+
 		buf = "text/html; charset=utf-8";
-
 		filepath = "html/main.html";
-
-		open_file(filepath, buf_data);
+		open_file(filepath, buf_data);	
 	}
+/*
+	if(is_page(filepath))//other page
+	{
+		std::cout<<"other page\n";
+		
+		buf = std::string("text/") + current_type;
+
+		open_file(std::string("html/") + filepath, buf_data);
+	}
+*/
 
 	if(is_image(filepath))
 	{
@@ -82,12 +118,8 @@ std::string Parser::get()
 	
 }
 
-std::string Parser::post()
-{
-	return "";
-}
 
-void Parser::open_file(std::string filepath, std::string &v){
+void Parser::open_file(std::string filepath, std::string &buf){
 
 	std::ifstream fin;
 	fin.open(filepath, std::ios::binary );
@@ -97,7 +129,7 @@ void Parser::open_file(std::string filepath, std::string &v){
 	else{
 		char ch;
 		while(fin.get(ch)){
-				v.push_back(ch);
+				buf.push_back(ch);
 		}
 		//std::cout<<"file "<<v<<'\n';
 	}
