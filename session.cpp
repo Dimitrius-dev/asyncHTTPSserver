@@ -4,7 +4,7 @@ session::session(boost::asio::io_service& io_service,
       boost::asio::ssl::context& context)
     : socket_(io_service, context), deadline_(io_service)
 {
-	timeout = 12;
+	
 }
 
 void session::check_deadline()
@@ -14,8 +14,8 @@ void session::check_deadline()
 	{
 
 
-		std::cout<<"===============exit=================\n";
-		std::cout<<"socket deleted\n";
+		//std::cout<<"===============exit=================\n";
+		//std::cout<<"socket deleted\n";
 
 		//socket_.lowest_layer().close();
 
@@ -89,11 +89,11 @@ void session::do_read(const boost::system::error_code& error, size_t bytes_trans
 		{
 			buf_r.append(buf);
 			
-			std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
+			//std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
 
 			parser.setRequest(buf_r);
 
-			std::string buf_s = " ";
+			std::string buf_s = "";
 
 			buf_s.append(parser.start());
 

@@ -42,7 +42,7 @@ private:
 
 	std::string buf_r;
 
-	int timeout;
+	int timeout = 12;
 
 	std::string flag_stop = "\r\n\r\n";
 	

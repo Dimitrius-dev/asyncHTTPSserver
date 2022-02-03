@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<body>
-		<h1>Привет?</h1>
-		<h2>ahahaha</h2>
-		<p><img src="photo.jpg"></p>
+	<head>
+		<title> Разработка </title>
+		<meta http-equiv="content-language" content="ru">
+		<meta name="description" content="Тестовый сайт совместного проекта при использовании сервера">
+		<meta name="author" content="Евгения Балашова, Дмитрий Белов"/>
+		<meta name="keywords" content="Тест, сервер, разработка, Дима, Женя"/>
+		<meta charset="utf-8">
+	</head>
+	<body bgcolor="#FFFFFF"> 
+		<font face="areal" size="15" color="grey"</font>
+		<h1 align="center"><B>Сайт Димы и Жени</B></h1>
+		<hr size="5" color="grey">
 
-		<form action="/" method="post" target="_blank">
-			<label for="fname">First name:</label>
-			<input type="text" id="fname" name="fname"><br><br>
-			<label for="lname">Last name:</label>
-			<input type="text" id="lname" name="lname"><br><br>
-			<input type="submit" value="Submit">
+		<center>
+			<img src="photo1.jpg" width="520" height="340" />
+		</center>
+
+		<hr size="5" color="grey">
+
+		<form action="/page1.html" method="post" target="_blank" align="left">
+			<button>Страница 1</button>
 		</form>
 
-<p>Click on the submit button, and the form will be submittied using the POST method.</p>
+		<form action="/page2.html" method="post" target="_blank" align="right">
+			<button>Страница 2</button>
+		</form>
 	</body>
 </html>
