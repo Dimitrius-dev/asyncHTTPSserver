@@ -4,49 +4,49 @@
 #include "libs.h"
 #include "parser.h"
 
+#include <cstdlib>
+#include <functional>
 #include <iostream>
-
-#include <boost/bind.hpp>
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
 
-typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+//typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> ssl_socket;
+using boost::asio::ip::tcp;
 
-class session
+class session : public std::enable_shared_from_this<session>
 {
 public:
-	session(boost::asio::io_service& io_service, boost::asio::ssl::context& context);
-
+	session(tcp::socket socket, boost::asio::ssl::context& context, boost::asio::io_context &io_context_);// boost::asio::io_context& io_context);
+	
 	void start();
 
-	ssl_socket::lowest_layer_type& socket();
+	//ssl_socket::lowest_layer_type& socket();
 
 private:
-	
-	void do_handshake(const boost::system::error_code& error);
-	
+
 	void check_deadline();
 
-	void do_read(const boost::system::error_code& error, size_t bytes_transferred);
+	void do_handshake();
 
-	void do_write(const boost::system::error_code& error);
+	void do_read();
 
-private:
-	boost::asio::deadline_timer deadline_;
+	void do_write(const char *data_send, std::size_t length);//const char *data_send
+
+	boost::asio::ssl::stream<tcp::socket> socket_;
+	//ssl_socket socket_;
 	
-	ssl_socket socket_;
-
-	enum { msg_length = 512 };//512
-
+	enum { msg_length = 1024 };//512
 	char data_[msg_length];
-
 	std::string buf_r;
+	std::string buf_s;
 
-	int timeout = 12;
+	int timeout = 15;
 
-	std::string flag_stop = "\r\n\r\n";
-	
+	std::string flag_stop = "\r\n";
+
 	Parser parser;
+
+	boost::asio::deadline_timer deadline_;
 };
 
 #endif

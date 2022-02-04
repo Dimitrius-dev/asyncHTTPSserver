@@ -117,17 +117,14 @@ std::string Parser::give()
 	}
 	else
 	{
-		buf_full = std::string("HTTP/1.1 200 OK\r\n") +
-					"Version: HTTP/1.1\r\n" +
-					"Content-Type: " + buf + "\r\n" +
-					"Content-Length: " + std::to_string(buf_data.size()) +
+		buf_full = std::string("HTTP/1.1 200 OK") + flag_stop +
+					"Version: HTTP/1.1" + flag_stop +
+					"Content-Type: " + buf + flag_stop +
+					"Content-Length: " + std::to_string(buf_data.size()) + flag_stop +
 					flag_stop +
 					buf_data + 
 					flag_stop;
 	}
-
-	
-		
 
 	return buf_full;
 	

@@ -1,49 +1,41 @@
+
 #include "server.h"
 
-server::server(boost::asio::io_service& io_service, unsigned short port)
-	: io_service_(io_service),
-		acceptor_(io_service,
-  		boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)),
-		context_(boost::asio::ssl::context::sslv23)
+server::server(boost::asio::io_context& io_context, unsigned short port)
+    : acceptor_(io_context, tcp::endpoint(tcp::v4(), port)),
+      context_(boost::asio::ssl::context::sslv23), io_context_(io_context)
 {
 	context_.set_options(
-		boost::asio::ssl::context::default_workarounds
+	boost::asio::ssl::context::default_workarounds
 		| boost::asio::ssl::context::no_sslv2
 		| boost::asio::ssl::context::single_dh_use);
-	context_.set_password_callback(boost::bind(&server::get_password, this));
-	context_.use_certificate_chain_file("keys/pem1/server.crt");
-	std::cout<<"use_certificate_chain_file - ok\n";
-	context_.use_private_key_file("keys/pem1/server.key", boost::asio::ssl::context::pem);
-	std::cout<<"use_private_key_file - ok\n";
-	context_.use_tmp_dh_file("keys/pem1/dh2048.pem");//?
-	std::cout<<"use_tmp_dh_file - ok\n";
+	context_.set_password_callback(std::bind(&server::get_password, this));
 
-	start_accept();
+	context_.use_certificate_chain_file("keys/pem1/server.crt");
+	//std::cout<<"use_certificate_chain_file - ok\n";
+	context_.use_private_key_file("keys/pem1/server.key", boost::asio::ssl::context::pem);
+	//std::cout<<"use_private_key_file - ok\n";
+	context_.use_tmp_dh_file("keys/pem1/dh2048.pem");
+	//std::cout<<"use_tmp_dh_file - ok\n";
+
+	do_accept();
 }
 
 std::string server::get_password() const
 {
-	return password;
+	return "test";
 }
 
-void server::start_accept()
+void server::do_accept()
 {
-	session* new_session = new session(io_service_, context_);
-	acceptor_.async_accept(new_session->socket(),
-		boost::bind(&server::do_accept, this, new_session,
-		  boost::asio::placeholders::error));
-}
-
-void server::do_accept(session* new_session, const boost::system::error_code& error)
-{
-	if (!error)
+	acceptor_.async_accept(
+	[this](const boost::system::error_code& error, tcp::socket socket)
 	{
-		new_session->start();
-	}
-	else
-	{
-		delete new_session;
-	}
-
-	start_accept();
+		if (!error)
+		{
+			std::make_shared<session>(std::move(socket), context_, io_context_)->start();
+		}
+		
+		do_accept();
+	});
 }

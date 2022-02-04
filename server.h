@@ -6,21 +6,18 @@
 class server
 {
 public:
-	server(boost::asio::io_service& io_service, unsigned short port);
+  server(boost::asio::io_context& io_context, unsigned short port);
+
+private:
 
 	std::string get_password() const;
 
-	void start_accept();
+ 	void do_accept();
 
-	void do_accept(session* new_session, const boost::system::error_code& error);
-
-private:
-	boost::asio::io_service& io_service_;
-	boost::asio::ip::tcp::acceptor acceptor_;
+	tcp::acceptor acceptor_;
 	boost::asio::ssl::context context_;
 
-	std::string password = "test1";
+	boost::asio::io_context &io_context_;
 };
-
 
 #endif

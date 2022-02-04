@@ -27,7 +27,7 @@ private:
 	std::string request = "";
 	std::string content = "";
 
-	std::string flag_stop = "\r\n\r\n";
+	std::string flag_stop = "\r\n";//"\r\n\r\n";
 
 	
 	std::string current_type;
