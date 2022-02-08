@@ -3,6 +3,15 @@
 
 #include "session.h"
 
+#define CHAINFILE "keys/letsencrypt/fullchain.pem"
+#define PRIVKEY "keys/letsencrypt/privkey.pem"
+
+//"keys/letsencrypt/fullchain.pem"
+//"keys/letsencrypt/privkey.pem"
+
+//"keys/pem1/server.crt"
+//"keys/pem1/server.key"
+
 class server
 {
 public:

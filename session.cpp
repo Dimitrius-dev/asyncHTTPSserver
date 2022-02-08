@@ -72,34 +72,44 @@ void session::do_read()
 	{
 		deadline_.cancel();
 		
-		if (!ec)
+		if(ec == boost::asio::ssl::error::stream_truncated)
 		{
-			//std::cout<<"do_read\n";
-			
-			std::string buf = " ";
-
-			buf.assign(data_, msg_length);
-			memset(data_,' ', msg_length);
-
-			buf_r.append(buf);
-			
-			//std::cout<<"info from browser:\n";
-			//std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
-
-			parser.setRequest(buf_r);
-			
-			buf_s = "";
-			buf_s.append(parser.start());
-
-			//std::cout<<"buf_s: \n";
-			//std::cout<<"buf_s: "<<buf_s<<'\n';
-
-			do_write(buf_s.c_str(), buf_s.length());
+			do_read();
 		}
 		else
 		{
-			//std::cout<<"socket deleted(do_read)\n";
+
+			if (!ec)
+			{
+				//std::cout<<"do_read\n";
+				std::string buf = " ";
+
+				buf.assign(data_, msg_length);
+				memset(data_,' ', msg_length);
+
+				buf_r.append(buf);
+				
+				//std::cout<<"info from browser:\n";
+				//std::cout<<"\ninfo from browser:\n"<<buf_r<<'\n';
+
+				parser.setRequest(buf_r);
+				
+				buf_s = "";
+				buf_s.append(parser.start());
+
+				//std::cout<<"buf_s: \n";
+				//std::cout<<"buf_s: "<<buf_s<<'\n';
+
+				do_write(buf_s.c_str(), buf_s.length());
+			}
+			else
+			{
+				//std::cout<<"socket deleted(do_read)\n";
+			}
+
 		}
+
+		
 	});
 }
 

@@ -1,0 +1,6 @@
+#!/bin/bash
+# c++ server on boost (ssl)
+# chmod +x ./start
+echo "compilation..."
+sudo nohup ./server 443 &
+echo "done"

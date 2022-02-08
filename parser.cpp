@@ -30,7 +30,7 @@ std::string Parser::start()
 	
 }
 
-bool Parser::is_image(std::string line)
+bool Parser::is_images(std::string line)
 {
 	for(int i = 0; i < type_images_size;i++)
 	{
@@ -43,7 +43,7 @@ bool Parser::is_image(std::string line)
 	return false;
 }
 
-bool Parser::is_page(std::string line)
+bool Parser::is_pages(std::string line)
 {
 	for(int i = 0; i < type_pages_size;i++)
 	{
@@ -82,37 +82,37 @@ std::string Parser::give()
 		//std::cout<<"home page\n";
 
 		buf = "text/html; charset=utf-8";
-		filepath = "html/main.html";
+
+		filepath = "site/pages/index.html";
 		open_file(filepath, buf_data);	
 	}
 	else
 	{
-		if(is_page(filepath))//other page
+		if(is_pages(filepath))//other page
 		{
 			//std::cout<<"other page\n";
 			//std::cout<<"current_type: <<"<<current_type<<"\n";			
 
 			buf = std::string("text/") + current_type.substr(1,current_type.length()) + "; charset=utf-8";
 
-			open_file(std::string("html/") + filepath, buf_data);
+			open_file(std::string("site/pages/") + filepath, buf_data);
 		}	
 	}
 
 		
 
 	
-	if(is_image(filepath))
+	if(is_images(filepath))
 	{
 		buf = std::string("image/") + current_type.substr(1,current_type.length());
 
-		open_file(std::string("images/") + filepath, buf_data);
+		open_file(std::string("site/img/") + filepath, buf_data);
 	}
 
 	if(buf_data == "not_found")
 	{
 		buf_full = std::string("HTTP/1.1 404 NOT FOUND\r\n") +
 					"Version: HTTP/1.1\r\n" +
-					flag_stop +
 					flag_stop;	
 	}
 	else
@@ -136,7 +136,7 @@ void Parser::open_file(std::string filepath, std::string &buf){
 	std::ifstream fin;
 	fin.open(filepath, std::ios::binary );
 	if(!fin.is_open()){
-		std::cout<<"error1\n";
+		//std::cout<<"error1\n";
 		buf = "not_found";
 	}
 	else{

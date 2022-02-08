@@ -40,7 +40,7 @@ private:
 	std::string buf_r;
 	std::string buf_s;
 
-	int timeout = 15;
+	int timeout = 5;
 
 	std::string flag_stop = "\r\n";
 

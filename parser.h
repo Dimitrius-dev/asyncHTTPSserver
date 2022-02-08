@@ -19,9 +19,9 @@ public:
 
 	void open_file(std::string filepath, std::string &v);
 
-	bool is_image(std::string line);
+	bool is_images(std::string line);
 
-	bool is_page(std::string line);
+	bool is_pages(std::string line);
 
 private:
 	std::string request = "";
@@ -40,11 +40,12 @@ private:
 		".ico"
 	};
 
-	int type_pages_size = 3;
-	std::string type_pages[3] = {
+	int type_pages_size = 4;
+	std::string type_pages[4] = {
 		".html",
 		".php",
-		".css"
+		".css",
+		".txt"
 	};
 
 };

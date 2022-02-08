@@ -11,11 +11,12 @@ server::server(boost::asio::io_context& io_context, unsigned short port)
 		| boost::asio::ssl::context::single_dh_use);
 	context_.set_password_callback(std::bind(&server::get_password, this));
 
-	context_.use_certificate_chain_file("keys/pem1/server.crt");
+	context_.use_certificate_chain_file(CHAINFILE);
 	//std::cout<<"use_certificate_chain_file - ok\n";
-	context_.use_private_key_file("keys/pem1/server.key", boost::asio::ssl::context::pem);
+	context_.use_private_key_file(PRIVKEY, boost::asio::ssl::context::pem);
 	//std::cout<<"use_private_key_file - ok\n";
-	context_.use_tmp_dh_file("keys/pem1/dh2048.pem");
+	
+	//context_.use_tmp_dh_file("keys/pem1/dh2048.pem");
 	//std::cout<<"use_tmp_dh_file - ok\n";
 
 	do_accept();
