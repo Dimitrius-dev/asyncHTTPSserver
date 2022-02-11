@@ -40,15 +40,14 @@ void session::do_read()
 	
 			std::string buf_data = std::string("<head>") + flag_stop +
 							"<meta http-equiv=\"refresh\" content=\"0;URL=" + url + "\" />" + flag_stop +
-							"</head>" + flag_stop;
+							"</head>";//flag_stop
 		
 			std::string redirect_msg = std::string("HTTP/1.1 200 OK") + flag_stop +
 								"Version: HTTP/1.1" + flag_stop +
 								"Content-Type: text/html; charset=utf-8" + flag_stop +
 								"Content-Length: " + std::to_string(buf_data.size()) + flag_stop +
 								flag_stop +
-								buf_data + 
-								flag_stop;
+								buf_data;
 
 			do_write(redirect_msg.c_str(), redirect_msg.length());
 		}

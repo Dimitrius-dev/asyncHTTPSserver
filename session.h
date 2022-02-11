@@ -26,6 +26,8 @@ private:
 
 	void check_deadline();
 
+	void disconnect();
+
 	void do_handshake();
 
 	void do_read();
@@ -40,7 +42,7 @@ private:
 	std::string buf_r;
 	std::string buf_s;
 
-	int timeout = 5;
+	int timeout = 25;
 
 	std::string flag_stop = "\r\n";
 

@@ -112,8 +112,7 @@ std::string Parser::give()
 	if(buf_data == "not_found")
 	{
 		buf_full = std::string("HTTP/1.1 404 NOT FOUND\r\n") +
-					"Version: HTTP/1.1\r\n" +
-					flag_stop;	
+					"Version: HTTP/1.1\r\n";	
 	}
 	else
 	{
@@ -122,8 +121,7 @@ std::string Parser::give()
 					"Content-Type: " + buf + flag_stop +
 					"Content-Length: " + std::to_string(buf_data.size()) + flag_stop +
 					flag_stop +
-					buf_data + 
-					flag_stop;
+					buf_data;
 	}
 
 	return buf_full;

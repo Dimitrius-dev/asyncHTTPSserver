@@ -1,0 +1,49 @@
+do_handshake - successful(do_handshake)0x5557416ab3f0
+do_read0x5557416ab3f0
+do_write0x5557416ab3f0
+do_handshake - successful(do_handshake)0x5557416c7810
+do_read - stream_truncated0x5557416ab3f0
+do_read0x5557416c7810
+do_write0x5557416c7810
+do_read - stream_truncated0x5557416c7810
+do_handshake - successful(do_handshake)0x5557416ca950
+do_read0x5557416ca950
+do_handshake - successful(do_handshake)0x5557416e2a90
+do_read0x5557416e2a90
+do_handshake - successful(do_handshake)0x55574170fef0
+do_read0x55574170fef0
+do_handshake - successful(do_handshake)0x5557416c2da0
+do_read0x5557416c2da0
+do_handshake - successful(do_handshake)0x555741717a80
+do_read0x555741717a80
+do_write0x5557416ca950
+do_read - stream_truncated0x5557416ca950
+do_read - stream_truncated0x5557416ca950
+do_write0x5557416e2a90
+do_read - stream_truncated0x5557416e2a90
+do_write0x55574170fef0
+do_write0x555741717a80
+do_read - stream_truncated0x55574170fef0
+do_read - stream_truncated0x555741717a80
+do_write0x5557416c2da0
+do_read - stream_truncated0x5557416c2da0
+do_handshake - successful(do_handshake)0x55574170e8b0
+do_read0x55574170e8b0
+do_write0x55574170e8b0
+do_read - stream_truncated0x55574170e8b0
+socket deleted(timeout)0x5557416ab3f0
+socket deleted(do_read)0x5557416ab3f0
+socket deleted(timeout)0x5557416c7810
+socket deleted(do_read)0x5557416c7810
+socket deleted(timeout)0x5557416ca950
+socket deleted(do_read)0x5557416ca950
+socket deleted(timeout)0x5557416e2a90
+socket deleted(do_read)0x5557416e2a90
+^Fsocket deleted(timeout)0x55574170fef0
+socket deleted(do_read)0x55574170fef0
+socket deleted(timeout)0x555741717a80
+socket deleted(do_read)0x555741717a80
+socket deleted(timeout)0x5557416c2da0
+socket deleted(do_read)0x5557416c2da0
+socket deleted(timeout)0x55574170e8b0
+socket deleted(do_read)0x55574170e8b0
