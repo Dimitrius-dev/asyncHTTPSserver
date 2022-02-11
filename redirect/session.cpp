@@ -18,9 +18,14 @@ void session::check_deadline()
 		//std::cout<<"===============exit=================\n";
 		//std::cout<<"socket deleted\n";
 	
-		socket_.close();
+		disconnect();
 	}
 
+}
+
+void session::disconnect()
+{
+	socket_.close();
 }
 
 void session::do_read()

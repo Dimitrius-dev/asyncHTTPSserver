@@ -7,40 +7,21 @@ session::session(tcp::socket socket, boost::asio::ssl::context& context, boost::
 {
 }
 
-/*
-ssl_socket::lowest_layer_type& session::socket()
-{
-	return socket_.lowest_layer();
-}
-*/
-
 
 void session::check_deadline()
 {
 	if (deadline_.expires_at() <= boost::asio::deadline_timer::traits_type::now())
 	{
 		//std::cout<<"===============exit=================\n";
-		//std::cout<<"socket deleted(timeout)"<<&socket_<<'\n';
-
-		//boost::system::error_code ec;
-		//socket_.lowest_layer().cancel(ec);
-		//socket_.lowest_layer().shutdown();
-		
-		//---------------------------------		
-		//socket_.lowest_layer().close();// - old variant
-		//---------------------------------
-
-		disconnect();
-				
-	
+		disconnect();	
 	}
 
 }
 
 void session::disconnect()
 {
-	socket_.lowest_layer().close();// - old variant
-	//socket_.shutdown();
+	//std::cout<<"disconnect\n";
+	socket_.lowest_layer().close();
 }
 
 

@@ -37,12 +37,12 @@ private:
 	boost::asio::ssl::stream<tcp::socket> socket_;
 	//ssl_socket socket_;
 	
-	enum { msg_length = 1024 };//512
+	enum { msg_length = 2048 };// buffer of https request (read)
 	char data_[msg_length];
 	std::string buf_r;
 	std::string buf_s;
 
-	int timeout = 25;
+	int timeout = 25; // timeout keep alive
 
 	std::string flag_stop = "\r\n";
 

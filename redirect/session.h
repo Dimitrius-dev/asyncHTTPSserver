@@ -28,6 +28,8 @@ private:
 
 	void check_deadline();
 
+	void disconnect();
+
 	std::string flag_stop = "\r\n";
 
 	tcp::socket socket_;
