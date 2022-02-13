@@ -25,7 +25,13 @@ std::string Parser::start()
 	}
 	*/
 
-	return give(); 
+	if( (request.find("GET") != std::string::npos) ||
+	(request.find("POST") != std::string::npos))
+	{
+		return give(); 	
+	}
+
+	return " "; 
 
 	
 }
@@ -111,8 +117,8 @@ std::string Parser::give()
 
 	if(buf_data == "not_found")
 	{
-		buf_full = std::string("HTTP/1.1 404 NOT FOUND\r\n") +
-					"Version: HTTP/1.1\r\n";	
+		buf_full = std::string("HTTP/1.1 404 NOT FOUND") + flag_stop +
+					"Version: HTTP/1.1" + flag_stop;	
 	}
 	else
 	{
@@ -134,7 +140,7 @@ void Parser::open_file(std::string filepath, std::string &buf){
 	std::ifstream fin;
 	fin.open(filepath, std::ios::binary );
 	if(!fin.is_open()){
-		//std::cout<<"error1\n";
+		//std::cout<<"error(no file)\n";
 		buf = "not_found";
 	}
 	else{
@@ -142,7 +148,7 @@ void Parser::open_file(std::string filepath, std::string &buf){
 		while(fin.get(ch)){
 				buf.push_back(ch);
 		}
-		//std::cout<<"file "<<v<<'\n';
+		//std::cout<<"ok (file)\n";
 	}
 
 	fin.close();

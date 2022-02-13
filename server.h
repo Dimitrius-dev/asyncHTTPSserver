@@ -23,10 +23,11 @@ private:
 
  	void do_accept();
 
-	tcp::acceptor acceptor_;
-	boost::asio::ssl::context context_;
+	boost::asio::io_context &io_context_; //order matters
+	tcp::acceptor acceptor_; //order matters
+	boost::asio::ssl::context context_; //order matters
 
-	boost::asio::io_context &io_context_;
+	
 };
 
 #endif

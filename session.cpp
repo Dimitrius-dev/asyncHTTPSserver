@@ -20,8 +20,11 @@ void session::check_deadline()
 
 void session::disconnect()
 {
-	//std::cout<<"disconnect\n";
+	//std::cout<<"disconnect(start)\n";
+	
 	socket_.lowest_layer().close();
+	
+	//std::cout<<"disconnect(end)\n";
 }
 
 
@@ -41,12 +44,12 @@ void session::do_handshake()
 	{
 		if (!error)
 		{
-			//std::cout<<"do_handshake - successful(do_handshake)"<<&socket_<<'\n';
+			//std::cout<<"do_handshake - successful(do_handshake)\n";
 			do_read();
 		}
 		else
 		{
-			//std::cout<<"socket deleted(do_handshake)"<<&socket_<<'\n';
+			//std::cout<<"socket deleted(do_handshake)\n";
 		}
 	});
 }
@@ -57,21 +60,21 @@ void session::do_read()
 	deadline_.async_wait(boost::bind(&session::check_deadline, this));
 
 	auto self(shared_from_this());
-	socket_.async_read_some(boost::asio::buffer(data_),
+	socket_.async_read_some(boost::asio::buffer(data_, msg_length),
 	[this, self](const boost::system::error_code& ec, std::size_t length)
 	{
 		deadline_.cancel();
 		
 		if(ec == boost::asio::ssl::error::stream_truncated)
 		{
-			//std::cout<<"stream_truncated(ok)"<<&socket_<<'\n';
+			//std::cout<<"stream_truncated(ok)\n";
 			disconnect();
 		}
 		else
 		{
 			if (!ec)
 			{
-				//std::cout<<"do_read"<<&socket_<<'\n';
+				//std::cout<<"do_read\n";
 				std::string buf = "";
 
 				buf.assign(data_, msg_length);
@@ -94,7 +97,7 @@ void session::do_read()
 			}
 			else
 			{
-				//std::cout<<"socket deleted(do_read)"<<&socket_<<'\n';
+				//std::cout<<"socket deleted(do_read)\n";
 			}
 		}
 		
@@ -112,7 +115,7 @@ void session::do_write(const char *data_send, std::size_t length)//const char *d
 	{
 		if (!ec)
 		{
-			//std::cout<<"do_write"<<&socket_<<'\n';
+			//std::cout<<"do_write\n";
 
 			buf_r.clear();
 
