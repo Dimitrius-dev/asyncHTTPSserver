@@ -11,9 +11,9 @@ public:
 private:
 	void do_accept();
 
-	tcp::acceptor acceptor_;
-
-	boost::asio::io_context &io_context_;
+	boost::asio::io_context &io_context_;//order matters
+	tcp::acceptor acceptor_;//order matters
+	
 };
 
 #endif

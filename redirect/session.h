@@ -32,12 +32,13 @@ private:
 
 	std::string flag_stop = "\r\n";
 
-	tcp::socket socket_;
+	boost::asio::deadline_timer deadline_;//order matters
+	tcp::socket socket_;//order matters
+
 	enum { max_length = 1024 };
 	char data_[max_length];
 
-	int timeout = 12;
-	boost::asio::deadline_timer deadline_;
+	int timeout = 12;	
 };
 
 #endif
