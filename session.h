@@ -34,8 +34,8 @@ private:
 
 	void do_write(const char *data_send, std::size_t length);//const char *data_send
 	
-	boost::asio::deadline_timer deadline_;//order matters
-	boost::asio::ssl::stream<tcp::socket> socket_;//order matters
+	boost::asio::deadline_timer deadline_;//order matters	
+	boost::asio::ssl::stream<tcp::socket> socket_;//order matters	
 	//ssl_socket socket_;
 	
 	enum { msg_length = 2048 };// buffer of https request (read)

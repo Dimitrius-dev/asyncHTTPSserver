@@ -21,14 +21,21 @@ void session::check_deadline()
 void session::disconnect()
 {
 	std::cout<<"disconnect(start)\n";
-	
-	if(socket_.lowest_layer().is_open())
+
+	boost::system::error_code ec;
+	socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+
+	if(!ec)
 	{
-		socket_.lowest_layer().close();
+		//std::cout << "closing the socket, thread = "<<pthread_self()<<'\n';
+
+		if(socket_.lowest_layer().is_open())
+		{
+			socket_.lowest_layer().close(ec);
+		}
 	}
-	
-	
-	std::cout<<"disconnect(end)\n";
+
+	//std::cout<<"disconnect(end)\n";
 }
 
 
