@@ -12,7 +12,7 @@ void session::check_deadline()
 {
 	if (deadline_.expires_at() <= boost::asio::deadline_timer::traits_type::now())
 	{
-		//std::cout<<"===============exit=================\n";
+		std::cout<<"===============exit=================\n";
 		disconnect();	
 	}
 
@@ -20,11 +20,15 @@ void session::check_deadline()
 
 void session::disconnect()
 {
-	//std::cout<<"disconnect(start)\n";
+	std::cout<<"disconnect(start)\n";
 	
-	socket_.lowest_layer().close();
+	if(socket_.lowest_layer().is_open())
+	{
+		socket_.lowest_layer().close();
+	}
 	
-	//std::cout<<"disconnect(end)\n";
+	
+	std::cout<<"disconnect(end)\n";
 }
 
 
@@ -67,7 +71,7 @@ void session::do_read()
 		
 		if(ec == boost::asio::ssl::error::stream_truncated)
 		{
-			//std::cout<<"stream_truncated(ok)\n";
+			std::cout<<"stream_truncated(ok)\n";
 			disconnect();
 		}
 		else
@@ -78,7 +82,8 @@ void session::do_read()
 				std::string buf = "";
 
 				buf.assign(data_, msg_length);
-				memset(data_,' ', msg_length);
+				
+				//memset(data_,' ', msg_length);
 
 				buf_r.append(buf);
 				
