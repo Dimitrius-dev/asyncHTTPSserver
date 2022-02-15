@@ -12,7 +12,7 @@ void session::check_deadline()
 {
 	if (deadline_.expires_at() <= boost::asio::deadline_timer::traits_type::now())
 	{
-		std::cout<<"===============exit=================\n";
+		//std::cout<<"===============exit=================\n";
 		disconnect();	
 	}
 
@@ -20,7 +20,7 @@ void session::check_deadline()
 
 void session::disconnect()
 {
-	std::cout<<"disconnect(start)\n";
+	//std::cout<<"disconnect(start)\n";
 
 	boost::system::error_code ec;
 	socket_.lowest_layer().shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
@@ -30,10 +30,20 @@ void session::disconnect()
 		//std::cout << "closing the socket, thread = "<<pthread_self()<<'\n';
 
 		if(socket_.lowest_layer().is_open())
-		{
+		{					
 			socket_.lowest_layer().close(ec);
+			//std::cout<<"dec\n";
+		}
+		else
+		{
+			//std::cout<<"error2\n";
 		}
 	}
+	else
+	{
+		//std::cout<<"error1\n";
+	}
+	
 
 	//std::cout<<"disconnect(end)\n";
 }
@@ -76,9 +86,10 @@ void session::do_read()
 	{
 		deadline_.cancel();
 		
-		if(ec == boost::asio::ssl::error::stream_truncated)
+		if( (ec == boost::asio::ssl::error::stream_truncated) || 
+			(ec == boost::asio::error::eof) )
 		{
-			std::cout<<"stream_truncated(ok)\n";
+			//std::cout<<"stream_truncated(ok)\n";
 			disconnect();
 		}
 		else
@@ -110,6 +121,7 @@ void session::do_read()
 			else
 			{
 				//std::cout<<"socket deleted(do_read)\n";
+				//std::cout<<"error: "<<ec<<" error what: "<<ec.message()<<'\n';
 			}
 		}
 		
@@ -132,6 +144,10 @@ void session::do_write(const char *data_send, std::size_t length)//const char *d
 			buf_r.clear();
 
 			do_read();
+		}
+		else
+		{
+			//std::cout<<"socket deleted(do_write)\n";
 		}
 	});
 }
